@@ -24,6 +24,7 @@
 
 import { Pool } from 'pg'
 import type { ProbeRequestResponse } from '../../../../interfaces/request'
+import { ProbeRequestResult } from '../../../../interfaces/request'
 import { differenceInMilliseconds } from 'date-fns'
 
 export type PostgresParam = {
@@ -51,6 +52,7 @@ export async function postgresRequest(
     status: 0,
     headers: '',
     responseTime: 0,
+    result: ProbeRequestResult.success,
     isProbeResponsive: false,
   }
   const startTime = new Date()
@@ -64,6 +66,7 @@ export async function postgresRequest(
     baseResponse.status = 200
     baseResponse.isProbeResponsive = result.isAlive
   } else {
+    baseResponse.result = ProbeRequestResult.failed
     baseResponse.body = result.message
     baseResponse.errMessage = result.message
   }

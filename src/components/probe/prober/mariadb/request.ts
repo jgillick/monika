@@ -23,6 +23,7 @@
  **********************************************************************************/
 
 import type { ProbeRequestResponse } from '../../../../interfaces/request'
+import { ProbeRequestResult } from '../../../../interfaces/request'
 import { differenceInMilliseconds } from 'date-fns'
 import { createConnection } from 'mariadb'
 
@@ -43,6 +44,7 @@ export async function mariaRequest(
     data: '',
     body: '',
     status: 0,
+    result: ProbeRequestResult.failed,
     headers: '',
     responseTime: 0,
     isProbeResponsive: false,
@@ -71,6 +73,7 @@ export async function mariaRequest(
     baseResponse.responseTime = duration
     baseResponse.body = 'database ok'
     baseResponse.status = 200
+    baseResponse.result = ProbeRequestResult.success
     baseResponse.isProbeResponsive = true
   }
 
