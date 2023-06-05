@@ -75,13 +75,6 @@ export async function probeHTTP(
       const combinedAlerts = [...probe.alerts, ...(request.alerts || [])]
       // Responses have been processed and validated
       const validatedResponse = validateResponse(combinedAlerts, probeRes)
-      const isAlertTriggered = validatedResponse.some(
-        (item) => item.isAlertTriggered
-      )
-      probeRes.result = isAlertTriggered
-        ? ProbeRequestResult.failed
-        : ProbeRequestResult.success
-
       // done probing, got some result, process it, check for thresholds and notifications
       const statuses = processThresholds({
         probe,
@@ -104,6 +97,12 @@ export async function probeHTTP(
           .filter((item) => item.isAlertTriggered)
           .map((item) => item.alert)
       )
+
+      // Set request result value
+      const isDown = statuses.some((item) => item.state === 'DOWN')
+      probeRes.result = isDown
+        ? ProbeRequestResult.failed
+        : ProbeRequestResult.success
 
       // so we've got a status that need to be reported/alerted
       // 1. check first, this connection is up, but was it ever down? if yes then use a specific connection recovery msg
