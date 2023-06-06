@@ -82,6 +82,12 @@ export async function probeHTTP(
         validatedResponse,
       })
 
+      // Set request result value
+      const isDown = statuses.some((item) => item.state === 'DOWN')
+      probeRes.result = isDown
+        ? ProbeRequestResult.failed
+        : ProbeRequestResult.success
+
       eventEmitter.emit(events.probe.response.received, {
         probe,
         requestIndex,
@@ -97,12 +103,6 @@ export async function probeHTTP(
           .filter((item) => item.isAlertTriggered)
           .map((item) => item.alert)
       )
-
-      // Set request result value
-      const isDown = statuses.some((item) => item.state === 'DOWN')
-      probeRes.result = isDown
-        ? ProbeRequestResult.failed
-        : ProbeRequestResult.success
 
       // so we've got a status that need to be reported/alerted
       // 1. check first, this connection is up, but was it ever down? if yes then use a specific connection recovery msg
