@@ -34,8 +34,8 @@ import { ProbeRequestResult } from '../../../interfaces/request'
 import type { ProbeRequestResponse } from '../../../interfaces/request'
 
 type PrometheusCustomCollector = {
-  statusCode: Gauge<'id' | 'name' | 'url' | 'method' | 'result'>
-  probeResult: Gauge<'id' | 'name' | 'url' | 'method' | 'statusCode'>
+  statusCode: Gauge<'id' | 'name' | 'url' | 'method'>
+  probeResult: Gauge<'id' | 'name' | 'url' | 'method'>
   responseTime: Histogram<
     'id' | 'name' | 'url' | 'method' | 'statusCode' | 'result'
   >
@@ -63,12 +63,12 @@ export class PrometheusCollector {
     const statusCode = new Gauge({
       name: 'monika_request_status_code_info',
       help: 'HTTP status code',
-      labelNames: ['id', 'name', 'url', 'method', 'result'] as const,
+      labelNames: ['id', 'name', 'url', 'method'] as const,
     })
     const probeResult = new Gauge({
       name: 'monika_probe_result',
       help: 'Probe result: -1=unknown, 0=failed, 1=success',
-      labelNames: ['id', 'name', 'url', 'method', 'statusCode'] as const,
+      labelNames: ['id', 'name', 'url', 'method'] as const,
     })
     const responseTime = new Histogram({
       name: 'monika_request_response_time_seconds',
@@ -160,7 +160,6 @@ export class PrometheusCollector {
         id,
         name,
         url,
-        result,
         method: method ?? 'GET',
       })
       .set(status)
@@ -170,7 +169,6 @@ export class PrometheusCollector {
         name,
         url,
         method: method ?? 'GET',
-        statusCode: status,
       })
       .set(result)
     resposeTimeCollector?.labels(labels).observe(responseTimeInSecond)
