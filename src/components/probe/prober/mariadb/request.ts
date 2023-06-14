@@ -44,7 +44,7 @@ export async function mariaRequest(
     data: '',
     body: '',
     status: 0,
-    result: ProbeRequestResult.failed,
+    result: ProbeRequestResult.unknown,
     headers: '',
     responseTime: 0,
     isProbeResponsive: false,
@@ -63,6 +63,7 @@ export async function mariaRequest(
   } catch (error: any) {
     baseResponse.body = error.message
     baseResponse.errMessage = error
+    baseResponse.result = ProbeRequestResult.failed
     isConnected = false
   }
 

@@ -44,6 +44,13 @@ export enum ProbeRequestResult {
   success = 1,
 }
 
+// The success/failure result of a probe
+export enum ProbeRequestResult {
+  unknown = -1,
+  failed = 0,
+  success = 1,
+}
+
 // ProbeRequestResponse is used to define the response from a probe requests.
 export interface ProbeRequestResponse<T = any> {
   requestType?: RequestTypes // is this for http (default) or icmp  or others
@@ -57,7 +64,7 @@ export interface ProbeRequestResponse<T = any> {
   isProbeResponsive: boolean // did the command/request response to requests/queries?
   errMessage?: string // any error message from drivers
 
-  result?: ProbeRequestResult
+  result?: ProbeRequestResult // did the probe succeed or fail?
 }
 
 // ProbeRequest is used to define the requests that is being made.
