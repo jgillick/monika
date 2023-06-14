@@ -23,6 +23,7 @@
  **********************************************************************************/
 
 import type { ProbeResult } from '..'
+import { ProbeRequestResult } from '../../../../interfaces/request'
 import type { Script } from '../../../../interfaces/probe'
 import { scriptRequest } from './request'
 
@@ -42,8 +43,8 @@ export async function probeScript({
   for await (const script of scripts) {
     const { cmd } = script
     const requestResponse = await scriptRequest(script)
-    const { body, responseTime, status } = requestResponse
-    const isAlertTriggered = status !== 0
+    const { body, responseTime, status, result } = requestResponse
+    const isAlertTriggered = result !== ProbeRequestResult.success
     const timeNow = new Date().toISOString()
     const logMessage = `${timeNow} ${checkOrder} id:${id} ${status} script:${cmd} ${responseTime}ms msg:${body}`
 
